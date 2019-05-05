@@ -32,6 +32,8 @@ public class TreeList
     public Condition con;
     public int conValue;
 
+    private Dictionary<TreeList, List<TreeList>> dic = new Dictionary<TreeList, List<TreeList>>();
+
     public TreeList()
     {
 
@@ -39,12 +41,16 @@ public class TreeList
 
     public void AddLeft(TreeList tl)
     {
+        //左孩子
         left = tl;
+        left.tRoot = this;
     }
 
     public void AddRight(TreeList tl)
     {
+        //右兄弟
         right = tl;
+        right.tRoot = this.tRoot;
     }
 
     public void MorrisIn()
@@ -127,10 +133,40 @@ public class TreeList
         TreeList cur = tail;
         while (cur != null)
         {
-            if(cur.isCondition)
-                Debug.Log( cur.con + " ");
+            if (cur.isCondition)
+            {//条件
+                Debug.Log(cur.con + " ");
+                if (dic.ContainsKey(cur.tRoot))
+                {
+                    var list = dic[cur.tRoot];
+                    if (!list.Contains(cur))
+                    {
+                        list.Add(cur);
+                    }
+                }
+                else
+                {
+                    List<TreeList> list = new List<TreeList>();
+                    list.Add(cur);
+                    dic.Add(cur.tRoot, list);
+                }
+
+            }
             else if (cur.isRelation)
+            {//逻辑关系
                 Debug.Log(cur.rel + " ");
+                if (dic.ContainsKey(cur))
+                {
+                    Debug.Log("---------------- " + cur.rel + " ----------------");
+
+                    foreach(var item in dic[cur])
+                    {
+                        Debug.Log("the value: " + item.con);
+                    }
+
+                    Debug.Log("---------------- " + cur.rel + " end ----------------");
+                }
+            }
             cur = cur.right;
         }
         ReverseEdge(tail);
