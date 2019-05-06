@@ -135,7 +135,7 @@ public class TreeList
         {
             if (cur.isCondition)
             {//条件
-                Debug.Log(cur.con + " ");
+                //Debug.Log(cur.con + " ");
                 if (dic.ContainsKey(cur.tRoot))
                 {
                     var list = dic[cur.tRoot];
@@ -153,15 +153,53 @@ public class TreeList
 
             }
             else if (cur.isRelation)
-            {//逻辑关系
+            {//逻辑关系 遍历到逻辑关系节点时，其子节点均已存入dic中，把dic中所有的值拿出来进行逻辑运算
                 Debug.Log(cur.rel + " ");
                 if (dic.ContainsKey(cur))
                 {
                     Debug.Log("---------------- " + cur.rel + " ----------------");
+                    bool res = dic[cur][0].conValue == 0 ? false : true;
+                    //foreach(var item in dic[cur])
+                    //{
+                    //    Debug.Log("the value: " + item.con);
+                    //}
 
-                    foreach(var item in dic[cur])
+                    for(int i = 1; i < dic[cur].Count; i++)
                     {
-                        Debug.Log("the value: " + item.con);
+                        var curBool = dic[cur][i].conValue == 0 ? false : true;
+                        Debug.Log("the value: " + dic[cur][i].con + "(" + curBool + ")" + " && " + res + " = " + (curBool && res));
+                        if (cur.rel == Relation.And)
+                        {
+                            res = res && curBool;
+                        }
+                        else if (cur.rel == Relation.Or)
+                        {
+                            res = res || curBool;
+                        }
+                    }
+
+                    cur.conValue = res == true ? 1 : 0;
+                    if (!cur.isRoot)
+                    {
+                        //如果cur不是root节点，继续进行存dic的操作
+                        //如果这里cur是root节点 就是最上层根节点 那么就不需要继续做存dic的操作了 其实可以直接跳出循环
+                        //但是下边cur = cur.right; cur的右节点一定为空 所以自己也可以终止while循环
+                    
+                        //这里把计算好的逻辑关系结果，赋值给关系节点，并且存入以他父节点为key的dic中
+                        if (dic.ContainsKey(cur.tRoot))
+                        {
+                            var list = dic[cur.tRoot];
+                            if (!list.Contains(cur))
+                            {
+                                list.Add(cur);
+                            }
+                        }
+                        else
+                        {
+                            List<TreeList> list = new List<TreeList>();
+                            list.Add(cur);
+                            dic.Add(cur.tRoot, list);
+                        }
                     }
 
                     Debug.Log("---------------- " + cur.rel + " end ----------------");
@@ -202,60 +240,60 @@ public class ConditionTree : MonoBehaviour {
 
         var a = new TreeList();
         a.isCondition = true;
-        a.isRoot = true;
+        a.isRoot = false;
         a.con = Condition.A;
         a.conValue = 1;
         root.AddLeft(a);
 
         var b = new TreeList();
         b.isCondition = true;
-        b.isRoot = true;
+        b.isRoot = false;
         b.con = Condition.B;
-        b.conValue = 0;
+        b.conValue = 1;
         a.AddRight(b);
 
         var or = new TreeList();
         or.isRelation = true;
-        or.isRoot = true;
+        or.isRoot = false;
         or.rel = Relation.Or;
         b.AddRight(or);
 
         var c = new TreeList();
         c.isCondition = true;
-        c.isRoot = true;
+        c.isRoot = false;
         c.con = Condition.C;
-        c.conValue = 1;
+        c.conValue = 0;
         or.AddLeft(c);
 
         var and = new TreeList();
         and.isRelation = true;
-        and.isRoot = true;
+        and.isRoot = false;
         and.rel = Relation.And;
         c.AddRight(and);
 
         var or1 = new TreeList();
         or1.isRelation = true;
-        or1.isRoot = true;
+        or1.isRoot = false;
         or1.rel = Relation.Or;
         and.AddLeft(or1);
 
         var d = new TreeList();
         d.isCondition = true;
-        d.isRoot = true;
+        d.isRoot = false;
         d.con = Condition.D;
         d.conValue = 1;
         or1.AddRight(d);
 
         var e = new TreeList();
         e.isCondition = true;
-        e.isRoot = true;
+        e.isRoot = false;
         e.con = Condition.E;
-        e.conValue = 1;
+        e.conValue = 0;
         or1.AddLeft(e);
 
         var f = new TreeList();
         f.isCondition = true;
-        f.isRoot = true;
+        f.isRoot = false;
         f.con = Condition.F;
         f.conValue = 1;
         e.AddRight(f);
@@ -270,6 +308,7 @@ public class ConditionTree : MonoBehaviour {
             {
                 //root.MorrisIn();
                 root.MorrisPos();
+                Debug.Log("jm ----------------------- result: " + root.conValue);
             }
         }
 		
