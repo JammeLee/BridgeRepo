@@ -12,20 +12,20 @@ namespace ZFrame.Editors
 {
     using UGUI;
 
-    [CustomEditor(typeof(UISpriteAtlas))]
+    [CustomEditor(typeof(UILabelAtlas))]
     [CanEditMultipleObjects]
-    public class UISpriteAtlasEditor : Editor
+    public class UILabelAtlasEditor : Editor
     {
 
-        private SerializedProperty m_AtlasName, m_SpriteName, m_Text;
+        private SerializedProperty _mAtlasName, _mSpriteName, _mPrefab, _mGroup, _mValue, _mPrefixName, _mArrSpriteName, _mSpriteCache;
 
-        private static System.Type SpriteEditorWindowType;
+        private static System.Type _spriteEditorWindowType;
 
         public static void OpenSpriteEditor(SpriteAtlas atlas, Sprite sprite)
         {
-            if (SpriteEditorWindowType == null)
+            if (_spriteEditorWindowType == null)
             {
-                SpriteEditorWindowType = typeof(EditorWindow).Assembly.GetTypes()
+                _spriteEditorWindowType = typeof(EditorWindow).Assembly.GetTypes()
                     .FirstOrDefault(t => t.Name == "SpriteEditorWindow");
             }
 
@@ -38,16 +38,21 @@ namespace ZFrame.Editors
                 .FirstOrDefault(f => Path.GetFileNameWithoutExtension(f) == spriteName);
 
             Selection.activeObject = AssetDatabase.LoadAssetAtPath<Texture>(path);
-            EditorWindow.GetWindow(SpriteEditorWindowType);
+            EditorWindow.GetWindow(_spriteEditorWindowType);
         }
 
         protected void OnEnable()
         {
             //base.OnEnable();
 
-            m_AtlasName = serializedObject.FindProperty("m_AtlasName");
-            m_SpriteName = serializedObject.FindProperty("m_SpriteName");
-            m_Text = serializedObject.FindProperty("m_Text");
+            _mAtlasName = serializedObject.FindProperty("mAtlasName");
+            _mSpriteName = serializedObject.FindProperty("mSpriteName");
+            _mPrefab = serializedObject.FindProperty("mTemplate");
+            _mGroup = serializedObject.FindProperty("mGroup");
+            _mValue = serializedObject.FindProperty("mValue");
+            _mPrefixName = serializedObject.FindProperty("mPrefixName");
+            _mArrSpriteName = serializedObject.FindProperty("mArrSpriteName");
+            _mSpriteCache = serializedObject.FindProperty("mSpriteCache");
             //m_PreserveAspect = serializedObject.FindProperty("m_PreserveAspect");
             //m_Type = serializedObject.FindProperty("m_Type");
         }
@@ -64,8 +69,8 @@ namespace ZFrame.Editors
 
         private void UpdateSprite(Sprite newSprite)
         {
-            var self = (UISpriteAtlas)target;
-            self.spriteCache = newSprite;
+            var self = (UILabelAtlas)target;
+            self.SpriteCache = newSprite;
             //if (newSprite)
             //{
             //    Image.Type oldType = (Image.Type)m_Type.enumValueIndex;
@@ -82,21 +87,30 @@ namespace ZFrame.Editors
 
         private void OnSpriteChanged(string spriteName)
         {
-            m_SpriteName.stringValue = spriteName;
+//            _mSpriteName.stringValue = spriteName;
 
-            var self = (UISpriteAtlas)target;
-            UpdateSprite(self.atlas.GetSprite(spriteName));
-            serializedObject.ApplyModifiedProperties();
+            var self = (UILabelAtlas)target;
+            self.SpriteCache = self.Atlas.GetSprite(spriteName);
+            self.SpriteName = spriteName;
+//            UpdateSprite(self.Atlas.GetSprite(spriteName));
+            var endIdx = spriteName.LastIndexOf('_');
+            if (endIdx != -1)
+            {
+                string prefix = spriteName.Substring(0, endIdx + 1);
+//                _mPrefixName.stringValue = prefix;
+                self.PrefixName = prefix;
+            }
+//            serializedObject.ApplyModifiedProperties();
         }
 
         private bool OverrideSpriteGUI()
         {
-            var self = (UISpriteAtlas)target;
+            var self = (UILabelAtlas)target;
             EditorGUILayout.BeginHorizontal();
 
             bool changed = false;
             EditorGUI.BeginChangeCheck();
-            var newSprite = EditorGUILayout.ObjectField(self.spriteCache, typeof(Sprite), false) as Sprite;
+            var newSprite = EditorGUILayout.ObjectField(self.SpriteCache, typeof(Sprite), false) as Sprite;
             if (EditorGUI.EndChangeCheck())
             {
                 UpdateSprite(newSprite);
@@ -106,29 +120,33 @@ namespace ZFrame.Editors
                 }
                 else
                 {
-                    self.spriteCache = null;
-                    m_SpriteName.stringValue = null;
+                    self.SpriteCache = null;
+                    _mSpriteName.stringValue = null;
+//                    _mPrefixName.stringValue = null;
+                    self.PrefixName = null;
                 }
             }
 
-            EditorGUI.BeginDisabledGroup(self.atlas == null);
+            EditorGUI.BeginDisabledGroup(self.Atlas == null);
             if (GUILayout.Button("Pick", EditorStyles.miniButtonLeft, GUILayout.Width(40)))
             {
-                SpriteSelector.Show(self.atlas, m_SpriteName.stringValue, OnSpriteChanged);
+                SpriteSelector.Show(self.Atlas, _mSpriteName.stringValue, OnSpriteChanged);
             }
 
             EditorGUI.EndDisabledGroup();
 
-            EditorGUI.BeginDisabledGroup(self.spriteCache == null);
+            EditorGUI.BeginDisabledGroup(self.SpriteCache == null);
             if (GUILayout.Button("Edit", EditorStyles.miniButtonMid, GUILayout.Width(40)))
             {
-                OpenSpriteEditor(self.atlas, self.spriteCache);
+                OpenSpriteEditor(self.Atlas, self.SpriteCache);
             }
 
             if (GUILayout.Button("Del", EditorStyles.miniButtonRight, GUILayout.Width(40)))
             {
-                self.spriteCache = null;
-                m_SpriteName.stringValue = null;
+                self.SpriteCache = null;
+                _mSpriteName.stringValue = null;
+//                _mPrefixName.stringValue = null;
+                self.PrefixName = null;
             }
 
             EditorGUI.EndDisabledGroup();
@@ -140,9 +158,12 @@ namespace ZFrame.Editors
 
         private void BaseInspectorGUI()
         {
-            var self = (UISpriteAtlas)target;
+            var self = (UILabelAtlas)target;
 
-            EditorGUILayout.PropertyField(m_Text);
+            EditorGUILayout.PropertyField(_mPrefab);
+            EditorGUILayout.PropertyField(_mGroup);
+            EditorGUILayout.PropertyField(_mValue);
+            EditorGUILayout.PropertyField(_mArrSpriteName);
 
             serializedObject.ApplyModifiedProperties();
 
@@ -168,10 +189,10 @@ namespace ZFrame.Editors
         private void AtlasGUI()
         {
             var atlasRoot = UGUITools.settings.atlasRoot;
-            var self = (UISpriteAtlas)target;
+            var self = (UILabelAtlas)target;
 
-            var atlasName = m_AtlasName.stringValue;
-            if (!string.IsNullOrEmpty(atlasName) && self.atlas == null)
+            var atlasName = _mAtlasName.stringValue;
+            if (!string.IsNullOrEmpty(atlasName) && self.Atlas == null)
             {
                 foreach (var bundleName in AssetDatabase.GetAllAssetBundleNames())
                 {
@@ -179,7 +200,7 @@ namespace ZFrame.Editors
                     {
                         if (bundleName.OrdinalIgnoreCaseEndsWith(atlasName))
                         {
-                            self.atlas = FindAtlas(bundleName, atlasName);
+                            self.Atlas = FindAtlas(bundleName, atlasName);
                             break;
                         }
                     }
@@ -187,10 +208,10 @@ namespace ZFrame.Editors
             }
 
             EditorGUILayout.BeginHorizontal();
-            var atlas = EditorGUILayout.ObjectField(self.atlas, typeof(SpriteAtlas), false) as SpriteAtlas;
+            var atlas = EditorGUILayout.ObjectField(self.Atlas, typeof(SpriteAtlas), false) as SpriteAtlas;
             if (GUILayout.Button("SpriteAtlas", EditorStyles.miniButton, GUILayout.Width(120)))
             {
-                EditorGUIUtility.ShowObjectPicker<SpriteAtlas>(self.atlas, false, string.Empty, 101);
+                EditorGUIUtility.ShowObjectPicker<SpriteAtlas>(self.Atlas, false, string.Empty, 101);
             }
 
             EditorGUILayout.EndHorizontal();
@@ -204,37 +225,39 @@ namespace ZFrame.Editors
                 }
             }
 
-            if (atlas != self.atlas)
+            if (atlas != self.Atlas)
             {
-                self.atlas = atlas;
-                self.spriteCache = null;
+                self.Atlas = atlas;
+                self.SpriteCache = null;
                 if (atlas)
                 {
-                    m_AtlasName.stringValue = atlas ? atlas.name : null;
+                    _mAtlasName.stringValue = atlas ? atlas.name : null;
                 }
                 else
                 {
-                    m_AtlasName.stringValue = null;
-                    m_SpriteName.stringValue = null;
+                    _mAtlasName.stringValue = null;
+                    _mSpriteName.stringValue = null;
+//                    _mPrefixName.stringValue = null;
+                    self.PrefixName = null;
                 }
             }
         }
 
         public override void OnInspectorGUI()
         {
-            var self = (UISpriteAtlas)target;
+            var self = (UILabelAtlas)target;
 
             /*
-            if (self.overrideSprite && string.IsNullOrEmpty(m_SpriteName.stringValue)) {
+            if (self.overrideSprite && string.IsNullOrEmpty(_mSpriteName.stringValue)) {
                 self.overrideSprite = null;
             }
             //*/
 
-            self.sprite = self.spriteCache;
+//            self.sprite = self.spriteCache;
             //base.OnInspectorGUI();
 
             BaseInspectorGUI();
-            self.sprite = null;
+//            self.sprite = null;
 
             //if (Application.isPlaying)
             //{
@@ -255,38 +278,50 @@ namespace ZFrame.Editors
 
             if (OverrideSpriteGUI())
             {
-                var overrideSp = self.spriteCache;
-                self.sprite = overrideSp;
+                var overrideSp = self.SpriteCache;
+//                self.sprite = overrideSp;
                 if (overrideSp)
                 {
-                    string packingTag, spriteName;
+                    string packingTag, spriteName, prefix;
+                    int endIdx;
                     var atlasPath = GetSpriteAssetRef(overrideSp, out packingTag, out spriteName);
-                    m_SpriteName.stringValue = spriteName;
-                    m_AtlasName.stringValue = packingTag;
-                    self.atlas = FindAtlas(atlasPath, packingTag);
+                    _mSpriteName.stringValue = spriteName;
+                    _mAtlasName.stringValue = packingTag;
+                    self.Atlas = FindAtlas(atlasPath, packingTag);
+                    endIdx = spriteName.LastIndexOf('_');
+                    if(endIdx != -1)
+                    {
+                        prefix = spriteName.Substring(0, endIdx + 1);
+//                        _mPrefixName.stringValue = prefix;
+                        self.PrefixName = prefix;
+                    }
+                    
                 }
                 else
                 {
-                    m_SpriteName.stringValue = null;
-                    m_AtlasName.stringValue = null;
-                    self.atlas = null;
+                    _mSpriteName.stringValue = null;
+                    _mAtlasName.stringValue = null;
+                    self.Atlas = null;
+//                    _mPrefixName.stringValue = null;
+                    self.PrefixName = null;
                 }
             }
 
             /*
             if (!Application.isPlaying) {
-                if (self.atlas && !string.IsNullOrEmpty(m_SpriteName.stringValue) && self.overrideSprite == null) {
-                    self.overrideSprite = self.atlas.GetSprite(m_SpriteName.stringValue);
+                if (self.atlas && !string.IsNullOrEmpty(_mSpriteName.stringValue) && self.overrideSprite == null) {
+                    self.overrideSprite = self.atlas.GetSprite(_mSpriteName.stringValue);
                     if (self.overrideSprite == null) {
-                        //m_SpriteName.stringValue = null;
+                        //_mSpriteName.stringValue = null;
                     }
                 }
             }
             //*/
 
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(m_AtlasName);
-            EditorGUILayout.PropertyField(m_SpriteName);
+            EditorGUILayout.PropertyField(_mAtlasName);
+            EditorGUILayout.PropertyField(_mSpriteName);
+            EditorGUILayout.PropertyField(_mPrefixName);
             //EditorGUILayout.PropertyField(m_Text);
             EditorGUI.EndDisabledGroup();
             --EditorGUI.indentLevel;
@@ -296,8 +331,8 @@ namespace ZFrame.Editors
 
         public override string GetInfoString()
         {
-            UISpriteAtlas image = (UISpriteAtlas)target;
-            Sprite sprite = image.spriteCache;
+            UILabelAtlas image = (UILabelAtlas)target;
+            Sprite sprite = image.SpriteCache;
 
             int x = (sprite != null) ? Mathf.RoundToInt(sprite.rect.width) : 0;
             int y = (sprite != null) ? Mathf.RoundToInt(sprite.rect.height) : 0;

@@ -259,11 +259,11 @@ namespace ZFrame.Editors
             Selection.activeGameObject = bar.gameObject;
         }
 
-        [MenuItem("ZFrame/UI控件/SpriteAtlas(SpriteAtlas)")]
-        [MenuItem("GameObject/ZFrame UI/SpriteAtlas(SpriteAtlas)", priority = 0)]
+        [MenuItem("ZFrame/UI控件/LabelAtlas(LabelAtlas)")]
+        [MenuItem("GameObject/ZFrame UI/LabelAtlas(LabelAtlas)", priority = 0)]
         static void CreateUISpriteAtlas()
         {
-            UISpriteAtlas sa = CreateUIElm<UISpriteAtlas>(null);
+            UILabelAtlas sa = CreateUIElm<UILabelAtlas>(null);
             sa.name = "spriteAtlas";
             var rectTrans = sa.GetComponent<RectTransform>();
             rectTrans.sizeDelta = new Vector2(160, 20);
@@ -271,21 +271,23 @@ namespace ZFrame.Editors
             var glg = sa.gameObject.AddComponent<GridLayoutGroup>();
             glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
             glg.constraintCount = 1;
+            glg.childAlignment = _TextAnchor.MiddleCenter;
             sa.gridLayoutGroup = glg;
 
             var grp = sa.gameObject.AddComponent<UIGroup>();
-            sa.group = grp;
+            sa.Group = grp;
 
 
             UISprite spBack = CreateUIElm<UISprite>(sa.gameObject);
             InitUISprite(spBack, "spNum", kBackgroundSpriteResourcePath, UISprite.Type.Simple, s_DefaultSelectableColor);
+            spBack.gameObject.AddComponent<LayoutElement>();
             //spBack.rectTransform.anchorMin = new Vector2(0, 0f);
             //spBack.rectTransform.anchorMax = new Vector2(1, 1f);
             //spBack.rectTransform.offsetMin = new Vector2(0, 0);
             //spBack.rectTransform.offsetMax = new Vector2(0, 0);
             spBack.SetNativeSize();
 
-            sa.uiSprite = spBack;
+            sa.Template = spBack;
             spBack.gameObject.SetActive(false);
 
             //UISprite spFill = CreateUIElm<UISprite>(bar.gameObject);
