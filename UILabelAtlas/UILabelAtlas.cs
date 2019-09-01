@@ -11,82 +11,63 @@ namespace ZFrame.UGUI{
 
 //		public Sprite sprite;
         [SerializeField]
-        protected string[] mArrSpriteName = new string[10];
+        protected string[] m_ArrSpriteName = new string[10];
 
         [SerializeField]
-        protected int mValue;
+        protected int m_Value;
         public int Value
         {
             get
             {
-                return mValue;
+                return m_Value;
             }
             set
             {
-                if (value != mValue)
+                if (value != m_Value)
                 {
-                    mValue = value;
+                    m_Value = value;
                     AutoLoadLabel();
                 }
             }
         }
 
-//		[SerializeField]
-//        [TextArea(3, 10)]
-//        protected string m_Text;
-//        public string text
-//        {
-//            get
-//            {
-//                return m_Text;
-//            }
-//            set
-//            {
-//                if (!value.Equals(m_Text))
-//                {
-//                    m_Text = value;
-//                    AutoLoadLabel();
-//                }
-//            }
-//        }
-
         [SerializeField]
-        protected UIGroup mGroup;
+        protected UIGroup m_Group;
         public UIGroup Group
         {
             get
             {
-                return mGroup;
+                return m_Group;
             }
             set
             {
-                mGroup = value;
+                m_Group = value;
             }
         }
 
         [SerializeField]
-        protected UISprite mTemplate;//uiSprite
+        protected UISprite m_Template;//uiSprite
         public UISprite Template
         {
             get
             {
-                return mTemplate;
+                return m_Template;
             }
             set
             {
-                mTemplate = value;
+                m_Template = value;
             }
         }
 
-        protected SpriteAtlas mAtlas;
+        protected SpriteAtlas m_Atlas;
         public SpriteAtlas Atlas
         {
-            get { return mAtlas; }
+            get { return m_Atlas; }
             set
             {
-                if (mAtlas != value)
+                if (m_Atlas != value)
                 {
-                    mAtlas = value;
+                    m_Atlas = value;
                     //if (value)
                     //{
                     //    overrideSprite = value.GetSprite(m_SpriteName);
@@ -96,65 +77,69 @@ namespace ZFrame.UGUI{
         }
 
         [SerializeField]
-        protected string mAtlasName;
+        protected string m_AtlasName;
         public string AtlasName
         {
-            get { return mAtlas ? mAtlas.name : mAtlasName; }
+            get { return m_Atlas ? m_Atlas.name : m_AtlasName; }
             set
             {
-                mAtlasName = value;
+                m_AtlasName = value;
                 Atlas = LoadAtlas(value, this);
             }
         }
 
         [SerializeField]
-        protected string mSpriteName;
+        protected string m_SpriteName;
         public string SpriteName
         {
-            get { return mSpriteName; }
+            get { return m_SpriteName; }
             set
             {
-                if(!value.Equals(mSpriteName))
-                    mSpriteName = value;
+                if (!value.Equals(m_SpriteName))
+                {
+                    m_SpriteName = value;
+                    InitSpriteNameArray();
+                }
+                    
             }
         }
 
-        [SerializeField]
-        protected string mPrefixName;
-        public string PrefixName
-        {
-            get { return mPrefixName; }
-            set
-            {
-                if(!value.Equals(mPrefixName))
-                {
-                    int i = 0;
-                    while (i < mArrSpriteName.Length)
-                    {
-                        LogMgr.D("iiiiiiiiiiiiiiiii: " + mPrefixName + i);
-                        mArrSpriteName[i] = mPrefixName + i.ToString();
-                        i++;
-                    }
-                    mPrefixName = value;
-                }
-                
-            }
-        }
+//        [SerializeField]
+//        protected string mPrefixName;
+//        public string PrefixName
+//        {
+//            get { return mPrefixName; }
+//            set
+//            {
+//                if(!value.Equals(mPrefixName))
+//                {
+//                    int i = 0;
+//                    while (i < m_ArrSpriteName.Length)
+//                    {
+//                        LogMgr.D("iiiiiiiiiiiiiiiii: " + mPrefixName + i);
+//                        m_ArrSpriteName[i] = mPrefixName + i.ToString();
+//                        i++;
+//                    }
+//                    mPrefixName = value;
+//                }
+//                
+//            }
+//        }
     
         [SerializeField]
-        protected Sprite mSpriteCache;
+        protected Sprite m_SpriteCache;
         public Sprite SpriteCache
         {
             get
             {
-                return mSpriteCache;
+                return m_SpriteCache;
             }
             set
             {
                 if (value && mGridLayoutGroup) {
                     mGridLayoutGroup.cellSize = new Vector2(value.rect.width, value.rect.height);
                 }
-                mSpriteCache = value as Sprite;
+                m_SpriteCache = value as Sprite;
                 AutoLoadLabel();
             }
         }
@@ -169,9 +154,9 @@ namespace ZFrame.UGUI{
             }
             set
             {
-                if (value && mSpriteCache)
+                if (value && m_SpriteCache)
                 {
-                    value.cellSize = new Vector2(mSpriteCache.rect.width, mSpriteCache.rect.height);
+                    value.cellSize = new Vector2(m_SpriteCache.rect.width, m_SpriteCache.rect.height);
                 }
                 mGridLayoutGroup = value as GridLayoutGroup;
             }
@@ -244,42 +229,58 @@ namespace ZFrame.UGUI{
             return atlas ? atlas.GetSprite(spriteName) : null;
         }
 
+        protected void InitSpriteNameArray()
+        {
+            var endIdx = SpriteName.LastIndexOf('_');
+            if(endIdx != -1)
+            {
+                var prefix = SpriteName.Substring(0, endIdx + 1);
+//                        _mPrefixName.stringValue = prefix;
+//                self.PrefixName = prefix;
+                for (int i = 0, lenght = m_ArrSpriteName.Length; i < lenght; i++)
+                {
+                    m_ArrSpriteName[i] = prefix + i.ToString();
+                }
+            }
+        }
+
 
         protected void InitAtlasSprite()
         {
-            if (mAtlas == null && !string.IsNullOrEmpty(mAtlasName))
+            if (m_Atlas == null && !string.IsNullOrEmpty(m_AtlasName))
             {
-                mAtlas = LoadAtlas(mAtlasName, null);
-                if (mAtlas == null)
+                m_Atlas = LoadAtlas(m_AtlasName, null);
+                if (m_Atlas == null)
                 {
                     LogMgr.D(this, "{0}: Atlas[{1}] NOT loaded.", this.GetHierarchy(), AtlasName);
                     SpriteCache = null;
                 }
             }
 
-            //AutoLoadSprite();
+            InitSpriteNameArray();
+            AutoLoadSprite();
             AutoLoadLabel();
         }
         
         public void SetSprite(string path, bool warnIfMissing)
         {
             if (!string.IsNullOrEmpty(path)) {
-                mAtlasName = SystemTools.GetDirPath(path);
-                mSpriteName = System.IO.Path.GetFileName(path);
+                AtlasName = SystemTools.GetDirPath(path);
+                SpriteName = System.IO.Path.GetFileName(path);
             } else {
-                mAtlasName = null;
-                mSpriteName = null;
+                AtlasName = null;
+                SpriteName = null;
             }
 
-            if (string.IsNullOrEmpty(mAtlasName)) {
-                mAtlas = null;
+            if (string.IsNullOrEmpty(m_AtlasName)) {
+                Atlas = null;
                 SpriteCache = null;
-            } else if (string.IsNullOrEmpty(mSpriteName)) {
+            } else if (string.IsNullOrEmpty(m_SpriteName)) {
                 SpriteCache = null;
             } else {
-                mAtlas = LoadAtlas(mAtlasName, warnIfMissing ? this : null);
-                if (mAtlas) {
-                    SpriteCache = mAtlas.GetSprite(mSpriteName);
+                Atlas = LoadAtlas(m_AtlasName, warnIfMissing ? this : null);
+                if (m_Atlas) {
+                    SpriteCache = m_Atlas.GetSprite(m_SpriteName);
                     if (SpriteCache == null && warnIfMissing) {
                         LogMgr.W("Load <Sprite:{0}> Fail!", path);
                     }
@@ -287,18 +288,23 @@ namespace ZFrame.UGUI{
             }
         }
 
-        protected void AutoLoadLabel()
+        protected void AutoLoadSprite()
         {
-            if ((SpriteCache == null || SpriteCache.texture == null) && mAtlas && !string.IsNullOrEmpty(mSpriteName)) {
-                SpriteCache = mAtlas.GetSprite(mSpriteName);
+            if ((SpriteCache == null || SpriteCache.texture == null) && m_Atlas && !string.IsNullOrEmpty(m_SpriteName)) {
+                SpriteCache = m_Atlas.GetSprite(m_SpriteName);
                 if (SpriteCache == null) {
-                    LogMgr.W(this, "Load <Sprite:{0}/{1}> Fail! @ {2}", mAtlasName, mSpriteName, this.GetHierarchy());
+                    LogMgr.W(this, "Load <Sprite:{0}/{1}> Fail! @ {2}", m_AtlasName, m_SpriteName, this.GetHierarchy());
 #if UNITY_EDITOR
                     if (Application.isPlaying)
 #endif
-                        mSpriteName = null;
+                        m_SpriteName = null;
                 }
             }
+        }
+
+        protected void AutoLoadLabel()
+        {
+            
             if (!Application.isPlaying)
                 return;
             var quotient = Value;
@@ -325,8 +331,8 @@ namespace ZFrame.UGUI{
                     com.atlas = Atlas;
                     com.canvasRenderer.cull = false;
                     le.ignoreLayout = false;
-                    LogMgr.D("jm ====================== set: {0}", AtlasName + "/" + mArrSpriteName[quotient % 10]);
-                    com.SetSprite(AtlasName + "/" + mArrSpriteName[quotient % 10]);
+                    LogMgr.D("jm ====================== set: {0}", AtlasName + "/" + m_ArrSpriteName[quotient % 10]);
+                    com.SetSprite(AtlasName + "/" + m_ArrSpriteName[quotient % 10]);
                 }
                 else
                 {
@@ -341,8 +347,8 @@ namespace ZFrame.UGUI{
 //                    ui.transform.localScale = Vector3.one;
                     //go.atlas = atlas;
                     ui.atlasName = AtlasName;
-                    LogMgr.D("jm ====================== set2: {0}", AtlasName + "/" + mArrSpriteName[quotient % 10]);
-                    ui.SetSprite(AtlasName + "/" + mArrSpriteName[quotient % 10]);
+                    LogMgr.D("jm ====================== set2: {0}", AtlasName + "/" + m_ArrSpriteName[quotient % 10]);
+                    ui.SetSprite(AtlasName + "/" + m_ArrSpriteName[quotient % 10]);
                     ui.name = "spNum_" + idx.ToString();
 
                     numDic.Add(idx, ui.gameObject);

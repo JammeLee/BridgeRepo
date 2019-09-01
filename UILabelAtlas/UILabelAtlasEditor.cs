@@ -17,7 +17,7 @@ namespace ZFrame.Editors
     public class UILabelAtlasEditor : Editor
     {
 
-        private SerializedProperty _mAtlasName, _mSpriteName, _mPrefab, _mGroup, _mValue, _mPrefixName, _mArrSpriteName, _mSpriteCache;
+        private SerializedProperty _mAtlasName, _mSpriteName, _mPrefab, _mGroup, _mValue,  _mSpriteCache; /*_mPrefixName, _mArrSpriteName,*/
 
         private static System.Type _spriteEditorWindowType;
 
@@ -45,14 +45,14 @@ namespace ZFrame.Editors
         {
             //base.OnEnable();
 
-            _mAtlasName = serializedObject.FindProperty("mAtlasName");
-            _mSpriteName = serializedObject.FindProperty("mSpriteName");
-            _mPrefab = serializedObject.FindProperty("mTemplate");
-            _mGroup = serializedObject.FindProperty("mGroup");
-            _mValue = serializedObject.FindProperty("mValue");
-            _mPrefixName = serializedObject.FindProperty("mPrefixName");
-            _mArrSpriteName = serializedObject.FindProperty("mArrSpriteName");
-            _mSpriteCache = serializedObject.FindProperty("mSpriteCache");
+            _mAtlasName = serializedObject.FindProperty("m_AtlasName");
+            _mSpriteName = serializedObject.FindProperty("m_SpriteName");
+            _mPrefab = serializedObject.FindProperty("m_Template");
+            _mGroup = serializedObject.FindProperty("m_Group");
+            _mValue = serializedObject.FindProperty("m_Value");
+//            _mPrefixName = serializedObject.FindProperty("mPrefixName");
+//            _mArrSpriteName = serializedObject.FindProperty("m_ArrSpriteName");
+            _mSpriteCache = serializedObject.FindProperty("m_SpriteCache");
             //m_PreserveAspect = serializedObject.FindProperty("m_PreserveAspect");
             //m_Type = serializedObject.FindProperty("m_Type");
         }
@@ -93,13 +93,13 @@ namespace ZFrame.Editors
             self.SpriteCache = self.Atlas.GetSprite(spriteName);
             self.SpriteName = spriteName;
 //            UpdateSprite(self.Atlas.GetSprite(spriteName));
-            var endIdx = spriteName.LastIndexOf('_');
-            if (endIdx != -1)
-            {
-                string prefix = spriteName.Substring(0, endIdx + 1);
-//                _mPrefixName.stringValue = prefix;
-                self.PrefixName = prefix;
-            }
+//            var endIdx = spriteName.LastIndexOf('_');
+//            if (endIdx != -1)
+//            {
+//                string prefix = spriteName.Substring(0, endIdx + 1);
+////                _mPrefixName.stringValue = prefix;
+//                self.PrefixName = prefix;
+//            }
 //            serializedObject.ApplyModifiedProperties();
         }
 
@@ -123,7 +123,7 @@ namespace ZFrame.Editors
                     self.SpriteCache = null;
                     _mSpriteName.stringValue = null;
 //                    _mPrefixName.stringValue = null;
-                    self.PrefixName = null;
+//                    self.PrefixName = null;
                 }
             }
 
@@ -146,7 +146,7 @@ namespace ZFrame.Editors
                 self.SpriteCache = null;
                 _mSpriteName.stringValue = null;
 //                _mPrefixName.stringValue = null;
-                self.PrefixName = null;
+//                self.PrefixName = null;
             }
 
             EditorGUI.EndDisabledGroup();
@@ -163,7 +163,7 @@ namespace ZFrame.Editors
             EditorGUILayout.PropertyField(_mPrefab);
             EditorGUILayout.PropertyField(_mGroup);
             EditorGUILayout.PropertyField(_mValue);
-            EditorGUILayout.PropertyField(_mArrSpriteName);
+//            EditorGUILayout.PropertyField(_mArrSpriteName);
 
             serializedObject.ApplyModifiedProperties();
 
@@ -238,7 +238,7 @@ namespace ZFrame.Editors
                     _mAtlasName.stringValue = null;
                     _mSpriteName.stringValue = null;
 //                    _mPrefixName.stringValue = null;
-                    self.PrefixName = null;
+//                    self.PrefixName = null;
                 }
             }
         }
@@ -293,7 +293,7 @@ namespace ZFrame.Editors
                     {
                         prefix = spriteName.Substring(0, endIdx + 1);
 //                        _mPrefixName.stringValue = prefix;
-                        self.PrefixName = prefix;
+//                        self.PrefixName = prefix;
                     }
                     
                 }
@@ -303,7 +303,7 @@ namespace ZFrame.Editors
                     _mAtlasName.stringValue = null;
                     self.Atlas = null;
 //                    _mPrefixName.stringValue = null;
-                    self.PrefixName = null;
+//                    self.PrefixName = null;
                 }
             }
 
@@ -321,7 +321,7 @@ namespace ZFrame.Editors
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.PropertyField(_mAtlasName);
             EditorGUILayout.PropertyField(_mSpriteName);
-            EditorGUILayout.PropertyField(_mPrefixName);
+//            EditorGUILayout.PropertyField(_mPrefixName);
             //EditorGUILayout.PropertyField(m_Text);
             EditorGUI.EndDisabledGroup();
             --EditorGUI.indentLevel;
