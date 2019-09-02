@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using ZFrame.Asset;
 
 namespace ZFrame.UGUI{
-	public class UILabelAtlas : UIBehaviour {
+	public class UILabelAtlas : UIBehaviour, IEventSystemHandler {
 
 //		public Sprite sprite;
         [SerializeField]
@@ -28,20 +28,6 @@ namespace ZFrame.UGUI{
                     m_Value = value;
                     AutoLoadLabel();
                 }
-            }
-        }
-
-        [SerializeField]
-        protected UIGroup m_Group;
-        public UIGroup Group
-        {
-            get
-            {
-                return m_Group;
-            }
-            set
-            {
-                m_Group = value;
             }
         }
 
@@ -68,15 +54,12 @@ namespace ZFrame.UGUI{
                 if (m_Atlas != value)
                 {
                     m_Atlas = value;
-                    //if (value)
-                    //{
-                    //    overrideSprite = value.GetSprite(m_SpriteName);
-                    //}
                 }
             }
         }
-
-        [SerializeField]
+        
+        
+        [SerializeField, AssetRef(name: "Atlas",type: typeof(SpriteAtlas))]
         protected string m_AtlasName;
         public string AtlasName
         {
@@ -88,45 +71,41 @@ namespace ZFrame.UGUI{
             }
         }
 
-        [SerializeField]
+//        [SerializeField]
+//        [SerializeField, AssetRef(type: typeof(Sprite))]
         protected string m_SpriteName;
         public string SpriteName
         {
-            get { return m_SpriteName; }
+            get { return !string.IsNullOrEmpty(m_SpriteName) ? m_SpriteName : m_ArrSpriteName[0]; }
             set
             {
                 if (!value.Equals(m_SpriteName))
                 {
-                    m_SpriteName = value;
+                    m_SpriteName = System.IO.Path.GetFileName(value);
                     InitSpriteNameArray();
                 }
                     
             }
         }
 
-//        [SerializeField]
-//        protected string mPrefixName;
-//        public string PrefixName
-//        {
-//            get { return mPrefixName; }
-//            set
-//            {
-//                if(!value.Equals(mPrefixName))
-//                {
-//                    int i = 0;
-//                    while (i < m_ArrSpriteName.Length)
-//                    {
-//                        LogMgr.D("iiiiiiiiiiiiiiiii: " + mPrefixName + i);
-//                        m_ArrSpriteName[i] = mPrefixName + i.ToString();
-//                        i++;
-//                    }
-//                    mPrefixName = value;
-//                }
-//                
-//            }
-//        }
-    
         [SerializeField]
+        protected string m_PrefixName;
+        public string PrefixName
+        {
+            get { return m_PrefixName; }
+            set
+            {
+                LogMgr.D("jm 0000000000000000000000000000");
+                if(!value.Equals(m_PrefixName))
+                {
+                    m_PrefixName = value;
+                    InitSpriteNameArray();
+                }
+                
+            }
+        }
+    
+//        [SerializeField]
         protected Sprite m_SpriteCache;
         public Sprite SpriteCache
         {
@@ -144,7 +123,7 @@ namespace ZFrame.UGUI{
             }
         }
 
-        [SerializeField]
+//        [SerializeField]
         protected GridLayoutGroup mGridLayoutGroup;
         public GridLayoutGroup gridLayoutGroup
         {
@@ -231,15 +210,18 @@ namespace ZFrame.UGUI{
 
         protected void InitSpriteNameArray()
         {
-            var endIdx = SpriteName.LastIndexOf('_');
-            if(endIdx != -1)
+            if (!string.IsNullOrEmpty(SpriteName))
             {
-                var prefix = SpriteName.Substring(0, endIdx + 1);
-//                        _mPrefixName.stringValue = prefix;
-//                self.PrefixName = prefix;
-                for (int i = 0, lenght = m_ArrSpriteName.Length; i < lenght; i++)
+                var sprName = System.IO.Path.GetFileName(SpriteName);
+                var endIdx = sprName.LastIndexOf('_');
+                if(endIdx != -1)
                 {
-                    m_ArrSpriteName[i] = prefix + i.ToString();
+                    var prefix = sprName.Substring(0, endIdx + 1);
+                    PrefixName = prefix;
+                    for (int i = 0, len = m_ArrSpriteName.Length; i < len; i++)
+                    {
+                        m_ArrSpriteName[i] = prefix + i.ToString();
+                    }
                 }
             }
         }
@@ -260,6 +242,15 @@ namespace ZFrame.UGUI{
             InitSpriteNameArray();
             AutoLoadSprite();
             AutoLoadLabel();
+        }
+        
+        public void SetSprite(string path)
+        {   
+#if UNITY_EDITOR
+            SetSprite(path, false);
+#else
+            SetSprite(path, true);
+#endif
         }
         
         public void SetSprite(string path, bool warnIfMissing)
@@ -497,7 +488,8 @@ namespace ZFrame.UGUI{
         {
             LogMgr.D("jm =-=-=-=-=-=-=-=-=-=-=: OnValidate");
             base.OnValidate();
-            //AutoLoadSprite();
+            InitSpriteNameArray();
+            AutoLoadSprite();
             AutoLoadLabel();
         }
 #endif

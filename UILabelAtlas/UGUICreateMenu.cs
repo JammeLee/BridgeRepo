@@ -263,23 +263,23 @@ namespace ZFrame.Editors
         [MenuItem("GameObject/ZFrame UI/LabelAtlas(LabelAtlas)", priority = 0)]
         static void CreateUISpriteAtlas()
         {
-            UILabelAtlas sa = CreateUIElm<UILabelAtlas>(null);
-            sa.name = "spriteAtlas";
-            var rectTrans = sa.GetComponent<RectTransform>();
+            UILabelAtlas la = CreateUIElm<UILabelAtlas>(null);
+            la.name = "spriteAtlas";
+            var go = la.gameObject;
+            var rectTrans = la.GetComponent<RectTransform>();
             rectTrans.sizeDelta = new Vector2(160, 20);
 
-            var glg = sa.gameObject.AddComponent<GridLayoutGroup>();
+            var glg = go.AddComponent<GridLayoutGroup>();
+            glg.startCorner = GridLayoutGroup.Corner.UpperRight;
+            glg.startAxis = GridLayoutGroup.Axis.Horizontal;
+            glg.childAlignment = _TextAnchor.MiddleCenter;
             glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
             glg.constraintCount = 1;
-            glg.childAlignment = _TextAnchor.MiddleCenter;
-            sa.gridLayoutGroup = glg;
-
-            var grp = sa.gameObject.AddComponent<UIGroup>();
-            sa.Group = grp;
+            la.gridLayoutGroup = glg;
 
 
-            UISprite spBack = CreateUIElm<UISprite>(sa.gameObject);
-            InitUISprite(spBack, "spNum", kBackgroundSpriteResourcePath, UISprite.Type.Simple, s_DefaultSelectableColor);
+            var spBack = CreateUIElm<UISprite>(go);
+            InitUISprite(spBack, "spNum", kStandardSpritePath, UISprite.Type.Simple, s_DefaultSelectableColor);
             spBack.gameObject.AddComponent<LayoutElement>();
             //spBack.rectTransform.anchorMin = new Vector2(0, 0f);
             //spBack.rectTransform.anchorMax = new Vector2(1, 1f);
@@ -287,16 +287,12 @@ namespace ZFrame.Editors
             //spBack.rectTransform.offsetMax = new Vector2(0, 0);
             spBack.SetNativeSize();
 
-            sa.Template = spBack;
+            la.Template = spBack;
             spBack.gameObject.SetActive(false);
+            
+            la.SetSprite(kStandardSpritePath);
 
-            //UISprite spFill = CreateUIElm<UISprite>(bar.gameObject);
-            //bar.m_CurrBar = spFill;
-            //InitUISprite(spFill, "spFill_", kStandardSpritePath, UISprite.Type.Sliced, s_DefaultSelectableColor);
-            //spFill.rectTransform.offsetMin = new Vector2(0, 0);
-            //spFill.rectTransform.offsetMax = new Vector2(0, 0);
-
-            Selection.activeGameObject = sa.gameObject;
+            Selection.activeGameObject = la.gameObject;
         }
 
         [MenuItem("ZFrame/UI控件/滑块(Slider)")]
