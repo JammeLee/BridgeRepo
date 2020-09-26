@@ -1,0 +1,44 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/mscorlib/mscorlib.csproj": {}
+  },
+  "projects": {
+    "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/mscorlib/mscorlib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/mscorlib/mscorlib.csproj",
+        "projectName": "mscorlib",
+        "projectPath": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/mscorlib/mscorlib.csproj",
+        "packagesPath": "/Users/jamme/.nuget/packages/",
+        "outputPath": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/mscorlib/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/Users/jamme/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net20"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net20": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net20": {}
+      }
+    }
+  }
+}

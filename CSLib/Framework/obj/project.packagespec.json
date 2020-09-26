@@ -1,0 +1,36 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Framework/cspFramework.csproj",
+    "projectName": "cspFramework",
+    "projectPath": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Framework/cspFramework.csproj",
+    "outputPath": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Framework/obj/",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "net20"
+    ],
+    "sources": {
+      "https://api.nuget.org/v3/index.json": {}
+    },
+    "frameworks": {
+      "net20": {
+        "projectReferences": {
+          "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Utility/cspUtility.csproj": {
+            "projectPath": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Utility/cspUtility.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "net20": {}
+  }
+}

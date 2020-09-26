@@ -1,0 +1,50 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v2.0": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v2.0": []
+  },
+  "packageFolders": {
+    "/Users/jamme/.nuget/packages/": {},
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Sys/System.csproj",
+      "projectName": "System",
+      "projectPath": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Sys/System.csproj",
+      "packagesPath": "/Users/jamme/.nuget/packages/",
+      "outputPath": "/Users/jamme/Documents/WorkSpace/GitHub/BridgeRepo/CSLib/Sys/obj/",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "/Users/jamme/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net20"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net20": {
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net20": {}
+    }
+  }
+}

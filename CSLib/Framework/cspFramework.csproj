@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>cspFramework</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>net20</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>Preview</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="cspUtility">
+      <HintPath>C:\Users\jamme\Desktop\cspUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="cspNetwork" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utility\cspUtility.csproj" />
+  </ItemGroup>
+</Project>
