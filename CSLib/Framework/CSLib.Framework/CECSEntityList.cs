@@ -172,6 +172,11 @@ namespace CSLib.Framework
 			}
 		}
 
+		// 大概意思是先检测entity是否已经存在于list（CECSEntityNode）中，如果已经存在，就先删除（flag=true）。
+		// 然后判断当前entity是否已经挂载全部的component，如果挂载，那么就在CECSEntityNode的尾部插入entity
+		// 如果entity是第一次被add（flag2=true且flag=false），那么会触发CbAddEntity方法，否则就不会触发
+		// 如果entity不是第一次被add（flag2=false且flag=true），并且entity上又没有挂载全部的component；那么会触发CbDelEntity方法
+		// 如果entity不是第一次被add（flag2=true且flag=true），但entity上挂载了全部的component；那么不会触发CbAddEntity方法，并直接return
 		public void RefreshEntity(CECSEntity entity, List<Type> matchTypes, AECSSystem system)
 		{
 			//Discarded unreachable code: IL_00f2
@@ -227,6 +232,7 @@ namespace CSLib.Framework
 						num = 11;
 						continue;
 					case 11:
+						// entity第一次被添加时（即flag=false,flag2=true），调用CbAddEntity
 						if (!flag && flag2)
 						{
 							num = 10;
@@ -256,6 +262,7 @@ namespace CSLib.Framework
 			}
 		}
 
+		// 大概意思是从list中删除传进来的node
 		private void ᜂ(CECSEntityNode A_0)
 		{
 			//Discarded unreachable code: IL_00c2

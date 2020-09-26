@@ -8,21 +8,21 @@ namespace CSLib.Framework
 	public class CECSEntity : CObjectPool<CECSEntity>.IPoolable
 	{
 		[CompilerGenerated]
-		private ulong ᜀ;
+		private ulong _baseId;
 
-		private List<AECSComponent> ᜁ = new List<AECSComponent>();
+		private List<AECSComponent> compoenets = new List<AECSComponent>();
 
 		public ulong BaseId
 		{
 			[CompilerGenerated]
 			get
 			{
-				return ᜀ;
+				return _baseId;
 			}
 			[CompilerGenerated]
 			set
 			{
-				ᜀ = value;
+				_baseId = value;
 			}
 		}
 
@@ -44,8 +44,8 @@ namespace CSLib.Framework
 						num = 1;
 						break;
 					}
-					ᜁ = componentList;
-					enumerator = ᜁ.GetEnumerator();
+					compoenets = componentList;
+					enumerator = compoenets.GetEnumerator();
 					num = 0;
 					break;
 				case 1:
@@ -97,7 +97,7 @@ namespace CSLib.Framework
 				switch (num)
 				{
 				case 0:
-					ᜁ.Add(component);
+					compoenets.Add(component);
 					component.Entity = this;
 					CSingleton<CECSEngine>.Instance.ᜁ(this);
 					num = 1;
@@ -108,7 +108,7 @@ namespace CSLib.Framework
 				if (true)
 				{
 				}
-				if (!ᜁ.Contains(component))
+				if (!compoenets.Contains(component))
 				{
 					num = 0;
 					continue;
@@ -126,14 +126,14 @@ namespace CSLib.Framework
 				switch (num)
 				{
 				default:
-					if (ᜁ.Contains(component))
+					if (compoenets.Contains(component))
 					{
 						num = 1;
 						break;
 					}
 					return;
 				case 1:
-					ᜁ.Remove(component);
+					compoenets.Remove(component);
 					component.Entity = null;
 					CSingleton<CECSEngine>.Instance.ᜁ(this);
 					num = 0;
@@ -181,7 +181,7 @@ namespace CSLib.Framework
 				case 8:
 					return;
 				case 3:
-					if (!ᜁ.Contains(components[num2]))
+					if (!compoenets.Contains(components[num2]))
 					{
 						num = 1;
 						continue;
@@ -191,7 +191,7 @@ namespace CSLib.Framework
 					if (true)
 					{
 					}
-					ᜁ.Add(components[num2]);
+					compoenets.Add(components[num2]);
 					components[num2].Entity = this;
 					num = 2;
 					continue;
@@ -227,7 +227,7 @@ namespace CSLib.Framework
 					num = ((num2 < components.Count) ? 8 : 6);
 					continue;
 				case 0:
-					ᜁ.Remove(components[num2]);
+					compoenets.Remove(components[num2]);
 					components[num2].Entity = null;
 					num = 7;
 					continue;
@@ -245,7 +245,7 @@ namespace CSLib.Framework
 					}
 					return;
 				case 8:
-					if (!ᜁ.Contains(components[num2]))
+					if (!compoenets.Contains(components[num2]))
 					{
 						num = 0;
 						continue;
@@ -278,7 +278,7 @@ namespace CSLib.Framework
 					case 4:
 						return true;
 					case 3:
-						if (ᜁ[num].GetType() != type)
+						if (compoenets[num].GetType() != type)
 						{
 							if (true)
 							{
@@ -296,7 +296,7 @@ namespace CSLib.Framework
 						num2 = 0;
 						continue;
 					case 0:
-						num2 = ((num >= ᜁ.Count) ? 5 : 3);
+						num2 = ((num >= compoenets.Count) ? 5 : 3);
 						continue;
 					case 5:
 						return false;
@@ -416,9 +416,9 @@ namespace CSLib.Framework
 						num2 = 4;
 						continue;
 					case 4:
-						if (num < ᜁ.Count)
+						if (num < compoenets.Count)
 						{
-							val = ᜁ[num] as T;
+							val = compoenets[num] as T;
 							num2 = 5;
 						}
 						else
@@ -451,9 +451,9 @@ namespace CSLib.Framework
 						}
 						goto case 0;
 					case 4:
-						return ᜁ[num];
+						return compoenets[num];
 					case 3:
-						if (ᜁ[num].GetType() != componentType)
+						if (compoenets[num].GetType() != componentType)
 						{
 							num++;
 							num2 = 0;
@@ -467,7 +467,7 @@ namespace CSLib.Framework
 						num2 = 2;
 						continue;
 					case 2:
-						num2 = ((num >= ᜁ.Count) ? 5 : 3);
+						num2 = ((num >= compoenets.Count) ? 5 : 3);
 						continue;
 					case 5:
 						return null;
@@ -489,9 +489,9 @@ namespace CSLib.Framework
 					switch (num2)
 					{
 					case 3:
-						return ᜁ[num];
+						return compoenets[num];
 					case 0:
-						if (!ᜁ[num].Name.Equals(name))
+						if (!compoenets[num].Name.Equals(name))
 						{
 							num++;
 							num2 = 4;
@@ -509,7 +509,7 @@ namespace CSLib.Framework
 						if (true)
 						{
 						}
-						num2 = ((num >= ᜁ.Count) ? 1 : 0);
+						num2 = ((num >= compoenets.Count) ? 1 : 0);
 						continue;
 					case 1:
 						return null;
@@ -552,9 +552,9 @@ namespace CSLib.Framework
 						num2 = 3;
 						continue;
 					case 3:
-						if (num < ᜁ.Count)
+						if (num < compoenets.Count)
 						{
-							component = ᜁ[num] as T;
+							component = compoenets[num] as T;
 							num2 = 1;
 						}
 						else
@@ -584,7 +584,7 @@ namespace CSLib.Framework
 		public void Reset()
 		{
 			//Discarded unreachable code: IL_0035
-			using (List<AECSComponent>.Enumerator enumerator = ᜁ.GetEnumerator())
+			using (List<AECSComponent>.Enumerator enumerator = compoenets.GetEnumerator())
 			{
 				int num = 4;
 				while (true)
@@ -619,7 +619,7 @@ namespace CSLib.Framework
 					break;
 				}
 			}
-			ᜁ.Clear();
+			compoenets.Clear();
 		}
 	}
 }

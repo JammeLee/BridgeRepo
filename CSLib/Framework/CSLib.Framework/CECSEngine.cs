@@ -7,7 +7,7 @@ namespace CSLib.Framework
 {
 	public class CECSEngine : CSingleton<CECSEngine>
 	{
-		private ulong ᜀ;
+		private ulong id;
 
 		public System.Action<IEnumerator> StartCoroutine;
 
@@ -17,7 +17,7 @@ namespace CSLib.Framework
 
 		private Dictionary<ulong, CECSEntity> ᜃ = new Dictionary<ulong, CECSEntity>();
 
-		private CObjectPool<CECSEntity> ᜄ = new CObjectPool<CECSEntity>();
+		private CObjectPool<CECSEntity> entityPool = new CObjectPool<CECSEntity>();
 
 		public void FixedUpdate(float detlaTime)
 		{
@@ -100,8 +100,8 @@ namespace CSLib.Framework
 			int num3 = default(int);
 			while (true)
 			{
-				CECSEntity cECSEntity = ᜄ.Obtain();
-				cECSEntity.BaseId = ++ᜀ;
+				CECSEntity cECSEntity = entityPool.Obtain();
+				cECSEntity.BaseId = ++id;
 				cECSEntity.InitComponents(componentList);
 				int num = 0;
 				int num2 = 1;
@@ -167,8 +167,8 @@ namespace CSLib.Framework
 			int num3 = default(int);
 			while (true)
 			{
-				CECSEntity cECSEntity = ᜄ.Obtain();
-				cECSEntity.BaseId = ++ᜀ;
+				CECSEntity cECSEntity = entityPool.Obtain();
+				cECSEntity.BaseId = ++id;
 				List<AECSComponent> list = new List<AECSComponent>();
 				int num = 0;
 				int num2 = 9;
@@ -401,7 +401,7 @@ namespace CSLib.Framework
 			}
 		}
 
-		internal void ᜁ(CECSEntity A_0)
+		internal void ᜁ(CECSEntity entity)
 		{
 			//Discarded unreachable code: IL_0055
 			int num3 = default(int);
@@ -424,7 +424,7 @@ namespace CSLib.Framework
 					case 2:
 						if (num3 < this.m_ᜂ.Count)
 						{
-							this.m_ᜂ[num3].SystemProcess.AddEntity(A_0);
+							this.m_ᜂ[num3].SystemProcess.AddEntity(entity);
 							num3++;
 							if (true)
 							{
@@ -445,7 +445,7 @@ namespace CSLib.Framework
 					case 3:
 						if (num < this.m_ᜁ.Count)
 						{
-							this.m_ᜁ[num].SystemProcess.AddEntity(A_0);
+							this.m_ᜁ[num].SystemProcess.AddEntity(entity);
 							num++;
 							num2 = 0;
 						}
@@ -460,7 +460,7 @@ namespace CSLib.Framework
 			}
 		}
 
-		private bool ᜂ(AECSSystem A_0)
+		private bool ᜂ(AECSSystem system)
 		{
 			//Discarded unreachable code: IL_00a0
 			List<AECSSystem>.Enumerator enumerator = this.m_ᜁ.GetEnumerator();
@@ -479,7 +479,7 @@ namespace CSLib.Framework
 						num = (enumerator.MoveNext() ? 6 : 2);
 						continue;
 					case 6:
-						if (enumerator.Current.FullName == A_0.FullName)
+						if (enumerator.Current.FullName == system.FullName)
 						{
 							num = 4;
 							continue;
@@ -576,7 +576,7 @@ namespace CSLib.Framework
 			}
 		}
 
-		private bool ᜁ(AECSSystem A_0)
+		private bool ᜁ(AECSSystem system)
 		{
 			//Discarded unreachable code: IL_0003
 			if (true)
@@ -597,7 +597,7 @@ namespace CSLib.Framework
 						num = (enumerator.MoveNext() ? 4 : 6);
 						continue;
 					case 4:
-						if (enumerator.Current.FullName == A_0.FullName)
+						if (enumerator.Current.FullName == system.FullName)
 						{
 							num = 2;
 							continue;
