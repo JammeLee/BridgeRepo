@@ -11,9 +11,9 @@ namespace CSLib.Framework
 
 		public System.Action<IEnumerator> StartCoroutine;
 
-		private List<AECSSystem> m_ᜁ = new List<AECSSystem>();
+		private List<AECSSystem> m_LSystems = new List<AECSSystem>(); // LogicSystem
 
-		private List<AECSSystem> m_ᜂ = new List<AECSSystem>();
+		private List<AECSSystem> m_FSystems = new List<AECSSystem>(); // FrameSystem
 
 		private Dictionary<ulong, CECSEntity> ᜃ = new Dictionary<ulong, CECSEntity>();
 
@@ -38,12 +38,12 @@ namespace CSLib.Framework
 						num2 = 1;
 						continue;
 					case 1:
-						if (num >= this.m_ᜁ.Count)
+						if (num >= this.m_LSystems.Count)
 						{
 							num2 = 0;
 							continue;
 						}
-						this.m_ᜁ[num].SystemProcess.Update(detlaTime);
+						this.m_LSystems[num].SystemProcess.Update(detlaTime);
 						num++;
 						num2 = 2;
 						continue;
@@ -74,12 +74,12 @@ namespace CSLib.Framework
 						num2 = 3;
 						continue;
 					case 3:
-						if (num >= this.m_ᜂ.Count)
+						if (num >= this.m_FSystems.Count)
 						{
 							num2 = 0;
 							continue;
 						}
-						this.m_ᜂ[num].SystemProcess.Update(detlaTime);
+						this.m_FSystems[num].SystemProcess.Update(detlaTime);
 						num++;
 						num2 = 2;
 						continue;
@@ -118,9 +118,9 @@ namespace CSLib.Framework
 						num2 = 3;
 						continue;
 					case 3:
-						if (num3 < this.m_ᜂ.Count)
+						if (num3 < this.m_FSystems.Count)
 						{
-							this.m_ᜂ[num3].SystemProcess.AddEntity(cECSEntity);
+							this.m_FSystems[num3].SystemProcess.AddEntity(cECSEntity);
 							num3++;
 							num2 = 0;
 						}
@@ -137,9 +137,9 @@ namespace CSLib.Framework
 						num2 = 2;
 						continue;
 					case 2:
-						if (num < this.m_ᜁ.Count)
+						if (num < this.m_LSystems.Count)
 						{
-							this.m_ᜁ[num].SystemProcess.AddEntity(cECSEntity);
+							this.m_LSystems[num].SystemProcess.AddEntity(cECSEntity);
 							num++;
 							num2 = 5;
 						}
@@ -185,12 +185,12 @@ namespace CSLib.Framework
 						num2 = 7;
 						continue;
 					case 7:
-						if (num3 >= this.m_ᜁ.Count)
+						if (num3 >= this.m_LSystems.Count)
 						{
 							num2 = 3;
 							continue;
 						}
-						this.m_ᜁ[num3].SystemProcess.AddEntity(cECSEntity);
+						this.m_LSystems[num3].SystemProcess.AddEntity(cECSEntity);
 						num3++;
 						if (true)
 						{
@@ -219,12 +219,12 @@ namespace CSLib.Framework
 						num2 = 0;
 						continue;
 					case 0:
-						if (num4 >= this.m_ᜂ.Count)
+						if (num4 >= this.m_FSystems.Count)
 						{
 							num2 = 8;
 							continue;
 						}
-						this.m_ᜂ[num4].SystemProcess.AddEntity(cECSEntity);
+						this.m_FSystems[num4].SystemProcess.AddEntity(cECSEntity);
 						num4++;
 						num2 = 5;
 						continue;
@@ -266,9 +266,9 @@ namespace CSLib.Framework
 						if (true)
 						{
 						}
-						if (num3 < this.m_ᜂ.Count)
+						if (num3 < this.m_FSystems.Count)
 						{
-							this.m_ᜂ[num3].SystemProcess.DelEntity(entity);
+							this.m_FSystems[num3].SystemProcess.DelEntity(entity);
 							num3++;
 							num2 = 0;
 						}
@@ -282,9 +282,9 @@ namespace CSLib.Framework
 						num2 = 1;
 						continue;
 					case 1:
-						if (num < this.m_ᜁ.Count)
+						if (num < this.m_LSystems.Count)
 						{
-							this.m_ᜁ[num].SystemProcess.DelEntity(entity);
+							this.m_LSystems[num].SystemProcess.DelEntity(entity);
 							num++;
 							num2 = 7;
 						}
@@ -422,9 +422,9 @@ namespace CSLib.Framework
 						num2 = 2;
 						continue;
 					case 2:
-						if (num3 < this.m_ᜂ.Count)
+						if (num3 < this.m_FSystems.Count)
 						{
-							this.m_ᜂ[num3].SystemProcess.AddEntity(entity);
+							this.m_FSystems[num3].SystemProcess.AddEntity(entity);
 							num3++;
 							if (true)
 							{
@@ -443,9 +443,9 @@ namespace CSLib.Framework
 						num2 = 3;
 						continue;
 					case 3:
-						if (num < this.m_ᜁ.Count)
+						if (num < this.m_LSystems.Count)
 						{
-							this.m_ᜁ[num].SystemProcess.AddEntity(entity);
+							this.m_LSystems[num].SystemProcess.AddEntity(entity);
 							num++;
 							num2 = 0;
 						}
@@ -463,7 +463,7 @@ namespace CSLib.Framework
 		private bool ᜂ(AECSSystem system)
 		{
 			//Discarded unreachable code: IL_00a0
-			List<AECSSystem>.Enumerator enumerator = this.m_ᜁ.GetEnumerator();
+			List<AECSSystem>.Enumerator enumerator = this.m_LSystems.GetEnumerator();
 			try
 			{
 				int num = 0;
@@ -527,7 +527,7 @@ namespace CSLib.Framework
 						break;
 					}
 					system.Engine = this;
-					this.m_ᜁ.Add(system);
+					this.m_LSystems.Add(system);
 					enumerator = ᜃ.GetEnumerator();
 					num = 2;
 					break;
@@ -582,7 +582,7 @@ namespace CSLib.Framework
 			if (true)
 			{
 			}
-			using (List<AECSSystem>.Enumerator enumerator = this.m_ᜂ.GetEnumerator())
+			using (List<AECSSystem>.Enumerator enumerator = this.m_FSystems.GetEnumerator())
 			{
 				int num = 5;
 				bool result = default(bool);
@@ -641,7 +641,7 @@ namespace CSLib.Framework
 						break;
 					}
 					system.Engine = this;
-					this.m_ᜂ.Add(system);
+					this.m_FSystems.Add(system);
 					enumerator = ᜃ.GetEnumerator();
 					num = 0;
 					break;
@@ -705,7 +705,7 @@ namespace CSLib.Framework
 						break;
 					}
 					system.Engine = this;
-					num2 = this.m_ᜂ.IndexOf(searchSystem);
+					num2 = this.m_FSystems.IndexOf(searchSystem);
 					num = 3;
 					break;
 				case 1:
@@ -719,7 +719,7 @@ namespace CSLib.Framework
 				case 3:
 					if (num2 < 0)
 					{
-						this.m_ᜂ.Add(system);
+						this.m_FSystems.Add(system);
 						CDebugOut.LogWarning(CMessageLabel.b("儡崣唥尧伩䄫ጭ䬯ȱ䤳㭻恬ቮ㷄", a_), searchSystem.FullName);
 						num = 1;
 					}
@@ -767,7 +767,7 @@ namespace CSLib.Framework
 						((IDisposable)enumerator).Dispose();
 					}
 				case 5:
-					this.m_ᜂ.Insert(num2, system);
+					this.m_FSystems.Insert(num2, system);
 					num = 2;
 					break;
 				}
@@ -827,9 +827,9 @@ namespace CSLib.Framework
 						num2 = 11;
 						continue;
 					case 11:
-						if (num3 < this.m_ᜂ.Count)
+						if (num3 < this.m_FSystems.Count)
 						{
-							val2 = this.m_ᜂ[num3] as T;
+							val2 = this.m_FSystems[num3] as T;
 							num2 = 6;
 						}
 						else
@@ -842,9 +842,9 @@ namespace CSLib.Framework
 						num2 = 5;
 						continue;
 					case 5:
-						if (num < this.m_ᜁ.Count)
+						if (num < this.m_LSystems.Count)
 						{
-							val = this.m_ᜁ[num] as T;
+							val = this.m_LSystems[num] as T;
 							num2 = 0;
 						}
 						else
@@ -909,9 +909,9 @@ namespace CSLib.Framework
 						num2 = 3;
 						continue;
 					case 3:
-						if (num3 < this.m_ᜂ.Count)
+						if (num3 < this.m_FSystems.Count)
 						{
-							system = this.m_ᜂ[num3] as T;
+							system = this.m_FSystems[num3] as T;
 							num2 = 4;
 						}
 						else
@@ -924,9 +924,9 @@ namespace CSLib.Framework
 						num2 = 9;
 						continue;
 					case 9:
-						if (num < this.m_ᜁ.Count)
+						if (num < this.m_LSystems.Count)
 						{
-							system = this.m_ᜁ[num] as T;
+							system = this.m_LSystems[num] as T;
 							num2 = 5;
 						}
 						else
@@ -959,7 +959,7 @@ namespace CSLib.Framework
 					switch (num2)
 					{
 					case 16:
-						system = this.m_ᜂ[num3];
+						system = this.m_FSystems[num3];
 						return true;
 					case 15:
 						if (fullName)
@@ -969,16 +969,16 @@ namespace CSLib.Framework
 						}
 						goto IL_01cb;
 					case 9:
-						system = this.m_ᜁ[num];
+						system = this.m_LSystems[num];
 						return true;
 					case 19:
-						system = this.m_ᜂ[num3];
+						system = this.m_FSystems[num3];
 						return true;
 					case 1:
 						num2 = 5;
 						continue;
 					case 5:
-						if (this.m_ᜁ[num].Name.Contains(name))
+						if (this.m_LSystems[num].Name.Contains(name))
 						{
 							num2 = 9;
 							continue;
@@ -988,7 +988,7 @@ namespace CSLib.Framework
 						num2 = 0;
 						continue;
 					case 0:
-						if (this.m_ᜂ[num3].Name.Contains(name))
+						if (this.m_FSystems[num3].Name.Contains(name))
 						{
 							num2 = 16;
 							continue;
@@ -999,17 +999,17 @@ namespace CSLib.Framework
 						num2 = 8;
 						continue;
 					case 8:
-						num2 = ((num3 >= this.m_ᜂ.Count) ? 14 : 15);
+						num2 = ((num3 >= this.m_FSystems.Count) ? 14 : 15);
 						continue;
 					case 11:
 					case 13:
 						num2 = 6;
 						continue;
 					case 6:
-						num2 = ((num < this.m_ᜁ.Count) ? 2 : 4);
+						num2 = ((num < this.m_LSystems.Count) ? 2 : 4);
 						continue;
 					case 17:
-						if (this.m_ᜁ[num].Name.Equals(name))
+						if (this.m_LSystems[num].Name.Equals(name))
 						{
 							num2 = 12;
 							continue;
@@ -1018,7 +1018,7 @@ namespace CSLib.Framework
 						num2 = 11;
 						continue;
 					case 7:
-						if (!this.m_ᜂ[num3].Name.Equals(name))
+						if (!this.m_FSystems[num3].Name.Equals(name))
 						{
 							num3++;
 							num2 = 10;
@@ -1029,7 +1029,7 @@ namespace CSLib.Framework
 						}
 						continue;
 					case 12:
-						system = this.m_ᜁ[num];
+						system = this.m_LSystems[num];
 						return true;
 					case 2:
 						if (fullName)
@@ -1071,7 +1071,7 @@ namespace CSLib.Framework
 					switch (num2)
 					{
 					case 11:
-						return this.m_ᜂ[num3];
+						return this.m_FSystems[num3];
 					case 5:
 						if (fullName)
 						{
@@ -1080,14 +1080,14 @@ namespace CSLib.Framework
 						}
 						goto IL_01b4;
 					case 2:
-						return this.m_ᜁ[num];
+						return this.m_LSystems[num];
 					case 7:
-						return this.m_ᜂ[num3];
+						return this.m_FSystems[num3];
 					case 6:
 						num2 = 12;
 						continue;
 					case 12:
-						if (this.m_ᜂ[num].Name.Contains(name))
+						if (this.m_FSystems[num].Name.Contains(name))
 						{
 							num2 = 2;
 							continue;
@@ -1097,7 +1097,7 @@ namespace CSLib.Framework
 						num2 = 8;
 						continue;
 					case 8:
-						if (this.m_ᜂ[num3].Name.Contains(name))
+						if (this.m_FSystems[num3].Name.Contains(name))
 						{
 							num2 = 11;
 							continue;
@@ -1108,17 +1108,17 @@ namespace CSLib.Framework
 						num2 = 0;
 						continue;
 					case 0:
-						num2 = ((num3 >= this.m_ᜂ.Count) ? 4 : 5);
+						num2 = ((num3 >= this.m_FSystems.Count) ? 4 : 5);
 						continue;
 					case 10:
 					case 19:
 						num2 = 14;
 						continue;
 					case 14:
-						num2 = ((num < this.m_ᜁ.Count) ? 15 : 16);
+						num2 = ((num < this.m_LSystems.Count) ? 15 : 16);
 						continue;
 					case 9:
-						if (this.m_ᜁ[num].Name.Equals(name))
+						if (this.m_LSystems[num].Name.Equals(name))
 						{
 							num2 = 1;
 							continue;
@@ -1127,7 +1127,7 @@ namespace CSLib.Framework
 						num2 = 10;
 						continue;
 					case 17:
-						if (!this.m_ᜂ[num3].Name.Equals(name))
+						if (!this.m_FSystems[num3].Name.Equals(name))
 						{
 							num3++;
 							num2 = 18;
@@ -1138,7 +1138,7 @@ namespace CSLib.Framework
 						}
 						continue;
 					case 1:
-						return this.m_ᜁ[num];
+						return this.m_LSystems[num];
 					case 15:
 						if (true)
 						{
@@ -1182,19 +1182,19 @@ namespace CSLib.Framework
 					switch (num2)
 					{
 					case 10:
-						this.m_ᜂ[num3].SystemProcess.Destroy();
-						this.m_ᜂ.RemoveAt(num3);
+						this.m_FSystems[num3].SystemProcess.Destroy();
+						this.m_FSystems.RemoveAt(num3);
 						return true;
 					case 7:
 						num3 = 0;
 						num2 = 3;
 						continue;
 					case 1:
-						this.m_ᜁ[num].SystemProcess.Destroy();
-						this.m_ᜁ.RemoveAt(num);
+						this.m_LSystems[num].SystemProcess.Destroy();
+						this.m_LSystems.RemoveAt(num);
 						return true;
 					case 5:
-						if (this.m_ᜁ[num] == system)
+						if (this.m_LSystems[num] == system)
 						{
 							num2 = 1;
 							continue;
@@ -1203,7 +1203,7 @@ namespace CSLib.Framework
 						num2 = 4;
 						continue;
 					case 8:
-						if (this.m_ᜂ[num3] != system)
+						if (this.m_FSystems[num3] != system)
 						{
 							num3++;
 							if (true)
@@ -1221,14 +1221,14 @@ namespace CSLib.Framework
 						num2 = 9;
 						continue;
 					case 9:
-						num2 = ((num3 < this.m_ᜂ.Count) ? 8 : 0);
+						num2 = ((num3 < this.m_FSystems.Count) ? 8 : 0);
 						continue;
 					case 4:
 					case 6:
 						num2 = 11;
 						continue;
 					case 11:
-						num2 = ((num >= this.m_ᜁ.Count) ? 7 : 5);
+						num2 = ((num >= this.m_LSystems.Count) ? 7 : 5);
 						continue;
 					case 0:
 						return false;
@@ -1251,19 +1251,19 @@ namespace CSLib.Framework
 					switch (num2)
 					{
 					case 3:
-						this.m_ᜂ[num3].SystemProcess.Destroy();
-						this.m_ᜂ.RemoveAt(num3);
+						this.m_FSystems[num3].SystemProcess.Destroy();
+						this.m_FSystems.RemoveAt(num3);
 						return true;
 					case 6:
 						num3 = 0;
 						num2 = 1;
 						continue;
 					case 11:
-						this.m_ᜁ[num].SystemProcess.Destroy();
-						this.m_ᜁ.RemoveAt(num);
+						this.m_LSystems[num].SystemProcess.Destroy();
+						this.m_LSystems.RemoveAt(num);
 						return true;
 					case 4:
-						if (this.m_ᜁ[num] is T)
+						if (this.m_LSystems[num] is T)
 						{
 							num2 = 11;
 							continue;
@@ -1272,7 +1272,7 @@ namespace CSLib.Framework
 						num2 = 2;
 						continue;
 					case 10:
-						if (!(this.m_ᜂ[num3] is T))
+						if (!(this.m_FSystems[num3] is T))
 						{
 							num3++;
 							num2 = 9;
@@ -1287,14 +1287,14 @@ namespace CSLib.Framework
 						num2 = 5;
 						continue;
 					case 5:
-						num2 = ((num3 < this.m_ᜂ.Count) ? 10 : 0);
+						num2 = ((num3 < this.m_FSystems.Count) ? 10 : 0);
 						continue;
 					case 2:
 					case 8:
 						num2 = 7;
 						continue;
 					case 7:
-						num2 = ((num >= this.m_ᜁ.Count) ? 6 : 4);
+						num2 = ((num >= this.m_LSystems.Count) ? 6 : 4);
 						continue;
 					case 0:
 						if (true)
